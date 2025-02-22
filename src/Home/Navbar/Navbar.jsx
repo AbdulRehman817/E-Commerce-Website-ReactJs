@@ -1,7 +1,11 @@
 import React, { useState, useContext, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-
+import { useNavigate } from "react-router-dom";
 const Navbar = () => {
+  const navigate = useNavigate();
+  const cartPage = () => {
+    navigate("/Cart");
+  };
   const [isCartOpen, setIsCartOpen] = useState(false);
 
   return (
@@ -67,10 +71,7 @@ const Navbar = () => {
             </div>
 
             {/* Cart Icon */}
-            <div
-              className="relative cursor-pointer"
-              onClick={() => setIsCartOpen(true)}
-            >
+            <div className="relative cursor-pointer" onClick={cartPage}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-6 w-6 text-white"
@@ -97,53 +98,6 @@ const Navbar = () => {
           </div>
         </div>
       </nav>
-
-      {/* Cart Drawer with Smooth Animation */}
-      <AnimatePresence>
-        {isCartOpen && (
-          <>
-            {/* Backdrop */}
-            <motion.div
-              className="fixed inset-0 bg-black bg-opacity-50 z-40"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setIsCartOpen(false)}
-            />
-
-            {/* Drawer */}
-            <motion.div
-              className="fixed right-0 top-0 h-full w-80 bg-white shadow-lg z-50 p-5"
-              initial={{ x: "100%" }}
-              animate={{ x: 0 }}
-              exit={{ x: "100%" }}
-              transition={{ type: "spring", stiffness: 200, damping: 25 }}
-            >
-              <div className="flex justify-between items-center border-b pb-2">
-                <h2 className="text-lg font-bold">Shopping Cart</h2>
-                <button
-                  className="text-gray-500"
-                  onClick={() => setIsCartOpen(false)}
-                >
-                  ✕
-                </button>
-              </div>
-
-              {/* Cart Item */}
-
-              {/* Cart Actions */}
-              <div className="mt-6 space-y-3">
-                <button className="w-full bg-gray-900 text-white py-2 rounded-lg">
-                  View Cart
-                </button>
-                <button className="w-full bg-blue-600 text-white py-2 rounded-lg">
-                  Checkout
-                </button>
-              </div>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
     </>
   );
 };

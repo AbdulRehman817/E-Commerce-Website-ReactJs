@@ -1,25 +1,41 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchProducts } from "../Redux/cartSlice";
+import { addToCart } from "../Redux/cartSlice";
 
-const SingleProduct = ({ title, image, description, item }) => {
+const SingleProduct = () => {
   const [data, setData] = useState(null);
   const [showDescription, setShowDescription] = useState(false);
+  const [quantity, setQuantity] = useState(1); // Fix: Define quantity state
   const { id } = useParams();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const items = useSelector((state) => state.allCart);
 
-  const hanleClick = (item) => {
-    console.log(item);
-  };
+  useEffect(() => {
+    console.log("Carts Item", items);
+  }, [items]);
+
+  useEffect(() => {
+    dispatch(fetchProducts());
+  }, [dispatch]);
+
   useEffect(() => {
     if (id) {
       axios
         .get(`http://localhost:3000/api/v1/getProduct/${id}`)
-        .then((res) => {
-          setData(res.data.product);
-        })
+        .then((res) => setData(res.data.product))
         .catch((error) => console.log(error));
     }
   }, [id]);
+
+  const handleQuantityChange = (type) => {
+    setQuantity((prev) =>
+      type === "increase" ? prev + 1 : Math.max(1, prev - 1)
+    );
+  };
 
   if (!data) {
     return (
@@ -65,7 +81,7 @@ const SingleProduct = ({ title, image, description, item }) => {
             {data.description}
           </p>
 
-          {data.keyFeatures?.length > 0 && (
+          {data?.keyFeatures?.length > 0 && (
             <ul className="list-disc pl-6 text-gray-700 mb-8 space-y-3">
               {data.keyFeatures.map((feature, index) => (
                 <li key={index} className="text-lg">
@@ -83,6 +99,8 @@ const SingleProduct = ({ title, image, description, item }) => {
           </div>
         </div>
       </div>
+
+      {/* Quantity Selector */}
       <div className="flex items-center mb-8">
         <div className="flex items-center border border-gray-300 rounded-md px-3 py-2 mr-5">
           <button
@@ -106,11 +124,16 @@ const SingleProduct = ({ title, image, description, item }) => {
         </div>
         <button
           className="bg-blue-500 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-md transition duration-300 focus:outline-none"
-          onClick={() => handleClick(item)}
+          onClick={() => {
+            dispatch(addToCart(data));
+            console.log(data);
+          }}
         >
           Add to Cart
         </button>
       </div>
+
+      {/* Description Section */}
       <div className="mt-10 border-t border-gray-200 pt-6">
         <h2
           className={`w-[126px] text-lg font-semibold text-gray-900 mb-4 cursor-pointer flex items-center border-t-2 px-4 py-2 transition-all ${
@@ -130,12 +153,11 @@ const SingleProduct = ({ title, image, description, item }) => {
               {data.MoreAbout || "No description available."}
             </p>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-6">
-              <h3 className="text-[2rem] font-semibold text-[#27323f] mt-6">
-                Product Features
-              </h3>
-
-              {data.productFeatures?.length > 0 && (
+            {data?.productFeatures?.length > 0 && (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-6">
+                <h3 className="text-[2rem] font-semibold text-[#27323f] mt-6">
+                  Product Features
+                </h3>
                 <ul className="list-disc text-gray-700 space-y-3 md:pl-4">
                   {data.productFeatures.map((feature, index) => (
                     <li key={index} className="text-lg">
@@ -143,8 +165,8 @@ const SingleProduct = ({ title, image, description, item }) => {
                     </li>
                   ))}
                 </ul>
-              )}
-            </div>
+              </div>
+            )}
           </>
         )}
       </div>

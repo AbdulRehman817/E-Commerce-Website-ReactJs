@@ -1,46 +1,37 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchProducts } from "../Redux/cartSlice";
 
 const Product = () => {
+  const dispatch = useDispatch();
+  const items = useSelector((state) => state.allCart?.items.products || []);
+  console.log(items);
   const navigate = useNavigate();
-  const [products, setProducts] = useState([]);
 
-  // Fetch all products from the API
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const response = await axios.get(
-          "http://localhost:3000/api/v1/getProduct"
-        );
-        setProducts(response.data?.products || []);
-      } catch (error) {
-        console.error("Error fetching products:", error);
-      }
-    };
+    dispatch(fetchProducts());
+  }, [dispatch]);
 
-    fetchProducts();
-  }, []);
+  // Group products by category
+  const groupedProducts = Array.isArray(items)
+    ? items.reduce((acc, product) => {
+        const category = product.Category || "Uncategorized"; // Ensure category exists
+        if (!acc[category]) {
+          acc[category] = [];
+        }
+        acc[category].push(product);
+        return acc;
+      }, {})
+    : {};
 
-  // Navigate to the single product page when a product is clicked
   const handleProductClick = (id) => {
     navigate(`/SingleProduct/${id}`);
   };
 
-  // Group products by category
-  const groupedProducts = products.reduce((acc, product) => {
-    const category = product.Category || "Uncategorized"; // Ensure category exists
-    if (!acc[category]) {
-      acc[category] = [];
-    }
-    acc[category].push(product);
-    return acc;
-  }, {});
-
   return (
     <div className="bg-[#f7fbfc] py-10">
       <div className="container mx-auto px-6">
-        {/* Loop through each category */}
         {Object.entries(groupedProducts).map(([category, categoryProducts]) => (
           <div
             key={category}
@@ -53,7 +44,6 @@ const Product = () => {
               </button>
             </div>
 
-            {/* Display products in a grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
               {categoryProducts.map((product) => (
                 <div
@@ -61,14 +51,11 @@ const Product = () => {
                   className="relative cursor-pointer"
                   onClick={() => handleProductClick(product._id)}
                 >
-                  {/* Product Image */}
                   <img
                     src={product.image}
                     alt={product.name}
                     className="w-full h-64 object-cover rounded-sm bg-gray-100"
                   />
-
-                  {/* Product Details */}
                   <div className="mt-4">
                     <div className="flex items-center text-yellow-500">
                       ★★★★★
@@ -94,7 +81,5 @@ const Product = () => {
     </div>
   );
 };
-
-// Function to get product data (moved outside Product component)
 
 export default Product;
