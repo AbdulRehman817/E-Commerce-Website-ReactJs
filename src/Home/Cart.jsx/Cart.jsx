@@ -1,15 +1,36 @@
-import React from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { FiTrash } from "react-icons/fi";
+import {
+  removeItem,
+  increaseItemQuantity,
+  decreaseItemQuantity,
+  setCart,
+} from "../Redux/cartSlice"; // assuming you have a setCart action
+import { useNavigate } from "react-router-dom";
 
 const CartPage = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { cart = [] } = useSelector((state) => state.allCart) || { cart: [] };
 
+  // Get Total Price
   const getTotalPrice = () => {
     return cart
       .reduce((total, item) => total + item.price * item.quantity, 0)
       .toFixed(2);
   };
+
+  // Save cart to localStorage whenever the cart state changes
+
+  // Load cart from localStorage on page load
+  useEffect(() => {
+    const savedCart = localStorage.getItem("cart");
+    if (savedCart) {
+      // Parse the saved cart and set it in Redux
+      dispatch(setCart(JSON.parse(savedCart)));
+    }
+  }, [dispatch]);
 
   return (
     <div className="min-h-screen bg-gray-100 flex justify-center items-center p-6">
@@ -19,9 +40,14 @@ const CartPage = () => {
         </h2>
 
         {cart.length === 0 ? (
-          <p className="text-gray-500 text-center py-10">
-            Your cart is empty. Start shopping! 🛍️
-          </p>
+          <div className="text-center py-10">
+            <p className="text-gray-500">
+              Your cart is empty. Start shopping! 🛍️
+            </p>
+            <button className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
+              Go to Shop
+            </button>
+          </div>
         ) : (
           <>
             <table className="w-full border-collapse">
@@ -47,7 +73,11 @@ const CartPage = () => {
                         <p className="text-gray-800 font-semibold">
                           {item.name}
                         </p>
-                        <p className="text-gray-500 text-sm">Size: XL</p>
+                        {item.size && (
+                          <p className="text-gray-500 text-sm">
+                            Size: {item.size}
+                          </p>
+                        )}
                       </div>
                     </td>
                     <td className="text-center text-gray-800">
@@ -55,11 +85,17 @@ const CartPage = () => {
                     </td>
                     <td className="text-center">
                       <div className="flex items-center justify-center gap-2 border p-2 rounded-lg">
-                        <button className="px-3 py-1 bg-gray-200 rounded-md">
+                        <button
+                          className="px-3 py-1 bg-gray-200 rounded-md"
+                          onClick={() => dispatch(decreaseItemQuantity(item))}
+                        >
                           −
                         </button>
                         <span className="text-gray-800">{item.quantity}</span>
-                        <button className="px-3 py-1 bg-gray-200 rounded-md">
+                        <button
+                          className="px-3 py-1 bg-gray-200 rounded-md"
+                          onClick={() => dispatch(increaseItemQuantity(item))}
+                        >
                           +
                         </button>
                       </div>
@@ -68,7 +104,12 @@ const CartPage = () => {
                       ${(item.price * item.quantity).toFixed(2)}
                     </td>
                     <td className="text-center">
-                      <button className="text-gray-500 hover:text-red-500">
+                      <button
+                        className="text-gray-500 hover:text-red-500"
+                        onClick={() => {
+                          dispatch(removeItem(item._id)); // use item._id or item.id depending on your item structure
+                        }}
+                      >
                         <FiTrash size={18} />
                       </button>
                     </td>
@@ -89,7 +130,10 @@ const CartPage = () => {
                   Excluding taxes & shipping
                 </p>
               </div>
-              <button className="bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg text-lg hover:bg-red-600 transition">
+              <button
+                className="bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg text-lg hover:bg-red-600 focus:outline-none focus:ring-4 focus:ring-red-300 transition ease-in-out duration-300"
+                onClick={() => navigate("/CheckoutPage")}
+              >
                 GO TO CHECKOUT
               </button>
             </div>

@@ -1,65 +1,55 @@
-import React, { StrictMode } from "react";
-
-import { createRoot } from "react-dom/client";
-import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom";
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { Provider } from "react-redux";
+import { store } from "./Home/Redux/store.js";
 import Layout from "./Layout.jsx";
 import Home from "./Home/Home.jsx";
-import ReactDOM from "react-dom/client";
-import { store } from "./Home/Redux/store.js";
-import { Provider } from "react-redux";
-import SignupPage from "./SignupPage/SignupPage.jsx";
+import Login from "./Home/Login/Login.jsx";
 import SingleProduct from "./Home/SingleProduct/SingleProduct.jsx";
 import SingleBestDealProducts from "./Home/SingleBestDealProducts/SingleBestDealProducts.jsx";
-import "./index.css";
+import CheckoutPage from "./Home/ChekoutPage/CheckoutPage.jsx";
 import Cart from "./Home/Cart.jsx/Cart.jsx";
+import Logout from "./Home/Navbar/Logout.jsx";
+// import Register from "./Home/Register/Register.jsx";
+import { AuthProvider } from "./Home/Redux/auth.jsx";
+import "./index.css";
 
+// Define Routes
 const router = createBrowserRouter([
   {
-    path: "",
+    path: "/",
     element: <Layout />,
     children: [
       {
-        path: "/",
+        path: "/home",
         element: <Home />,
       },
       {
         path: "SingleBestDealProducts/:id",
         element: <SingleBestDealProducts />,
       },
-      {
-        path: "SingleProduct/:id",
-        element: <SingleProduct />,
-      },
-      {
-        path: "cart",
-        element: <Cart />,
-      },
+      { path: "SingleProduct/:id", element: <SingleProduct /> },
+      { path: "cart", element: <Cart /> },
+      { path: "CheckoutPage", element: <CheckoutPage /> },
+      { path: "/Login", element: <Login /> },
+      { path: "logout", element: <Logout /> },
+      { path: "*", element: <h1>404 - Not Found</h1> },
     ],
   },
-
-  // {
-  //   path: "login",
-  //   element: <Login />,
-  // },
-  {
-    path: "signup",
-    element: <SignupPage />,
-  },
-  // {
-  //   path: "input",
-  //   element: <Input />,
-  // },
-
-  {
-    path: "*",
-    element: "NOT FOUND!",
-  },
+  // { path: "Register", element: <Register /> },
 ]);
 
+// Render Application
+
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
-    <Provider store={store}>
+  <Provider store={store}>
+    {" "}
+    {/* Redux Provider should be outermost if state management is global */}
+    <AuthProvider>
+      {" "}
+      {/* Wrap AuthProvider inside Redux Provider */}
       <RouterProvider router={router} />
-    </Provider>
-  </React.StrictMode>
+    </AuthProvider>
+  </Provider>
 );

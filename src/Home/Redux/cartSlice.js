@@ -24,13 +24,11 @@ const cartSlice = createSlice({
       let existingItem = state.cart.findIndex(
         (items) => items.id === action.payload.id
       );
-      // if (find >= 0) {
-      //   state.cart[find].quantity += 1;
-      // } else {
-      //   state.cart.push({ ...action.payload, quantity: 1 });
-      // }
 
       state.cart.push({ ...action.payload, quantity: 1 });
+    },
+    setCart: (state, action) => {
+      state.cart = action.payload;
     },
     getCartTotal: (state) => {
       let { totalQuantity, totalPrice } = state.cart.reduce(
@@ -50,21 +48,24 @@ const cartSlice = createSlice({
       state.totalQuantity = totalQuantity;
     },
     removeItem: (state, action) => {
-      state.cart = state.cart.filter((item) => item.id !== action.payload);
+      state.cart = state.cart.filter((item) => item._id !== action.payload);
     },
     increaseItemQuantity: (state, action) => {
-      state.cart = state.cart.map((item) =>
-        item.id === action.payload
-          ? { ...item, quantity: item.quantity + 1 }
-          : item
+      const itemIndex = state.cart.findIndex(
+        (item) => item.id === action.payload.id
       );
+      if (itemIndex >= 0) {
+        state.cart[itemIndex].quantity += 1;
+      }
     },
+
     decreaseItemQuantity: (state, action) => {
-      state.cart = state.cart.map((item) =>
-        item.id === action.payload
-          ? { ...item, quantity: item.quantity - 1 }
-          : item
+      const itemIndex = state.cart.findIndex(
+        (item) => item.id === action.payload.id
       );
+      if (itemIndex >= 0 && state.cart[itemIndex].quantity > 1) {
+        state.cart[itemIndex].quantity -= 1;
+      }
     },
   },
   extraReducers: (builder) => {
@@ -80,6 +81,7 @@ export const {
   removeItem,
   increaseItemQuantity,
   decreaseItemQuantity,
+  setCart,
 } = cartSlice.actions;
 
 export default cartSlice.reducer;

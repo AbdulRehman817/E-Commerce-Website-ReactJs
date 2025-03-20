@@ -1,12 +1,17 @@
 import React, { useState, useContext, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { useAuth } from "../Redux/auth";
 const Navbar = () => {
+  const { isLoggedIn, LogoutUser, user } = useAuth();
   const navigate = useNavigate();
   const cartPage = () => {
     navigate("/Cart");
   };
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [userdata, setUserData] = useState(true);
 
   return (
     <>
@@ -22,30 +27,30 @@ const Navbar = () => {
 
           {/* Navigation Links */}
           <div className="hidden lg:flex space-x-6 text-white text-sm font-medium">
-            <a href="#" className="hover:text-lime-300">
+            <Link href="#" className="hover:text-lime-300">
               All products
-            </a>
-            <a href="#" className="hover:text-lime-300">
+            </Link>
+            <Link to="/home-appliances" className="hover:text-lime-300">
               Home appliances
-            </a>
-            <a href="#" className="hover:text-lime-300">
+            </Link>
+            <Link to="#" className="hover:text-lime-300">
               Audio & video
-            </a>
-            <a href="#" className="hover:text-lime-300">
+            </Link>
+            <Link to="#" className="hover:text-lime-300">
               Refrigerator
-            </a>
-            <a href="#" className="hover:text-lime-300">
+            </Link>
+            <Link to="#" className="hover:text-lime-300">
               New arrivals
-            </a>
-            <a href="#" className="hover:text-lime-300">
+            </Link>
+            <Link href="#" className="hover:text-lime-300">
               Today's deal
-            </a>
-            <a href="#" className="hover:text-lime-300">
+            </Link>
+            <Link to="#" className="hover:text-lime-300">
               Gift cards
-            </a>
+            </Link>
           </div>
 
-          {/* Right Section: Search, Cart, and Login */}
+          {/* Right Section: Search, Cart, Profile, and Login */}
           <div className="flex items-center space-x-6">
             {/* Search Bar */}
             <div className="relative hidden md:block">
@@ -69,7 +74,6 @@ const Navbar = () => {
                 </svg>
               </button>
             </div>
-
             {/* Cart Icon */}
             <div className="relative cursor-pointer" onClick={cartPage}>
               <svg
@@ -87,14 +91,65 @@ const Navbar = () => {
                 <path d="M1 1h4l2.68 13.39a2 2 0 001.99 1.61h9.72a2 2 0 001.99-1.61L23 6H6"></path>
               </svg>
             </div>
-
-            {/* Login Button */}
-            <a
-              href="#"
-              className="text-white font-medium text-sm hover:text-lime-300 border border-white px-4 py-2 rounded-full"
-            >
-              Log In
-            </a>
+            {/* Profile Section */}
+            {isLoggedIn && user && (
+              <div className="relative">
+                <div
+                  className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center cursor-pointer"
+                  onClick={() => setIsProfileOpen(!isProfileOpen)}
+                >
+                  <span className="text-gray-600 font-bold">
+                    {user?.data.email.charAt(0) || "U"}
+                  </span>
+                </div>
+                {isProfileOpen && (
+                  <div className="absolute right-0 mt-2 w-48 bg-slate-800 text-white rounded-lg shadow-lg z-10">
+                    <div className="px-4 py-3 border-b border-slate-700">
+                      <p className="font-bold">
+                        {user?.data.name || "Bonnie Green"}
+                      </p>
+                      <p className="text-[12px] text-gray-300">
+                        {user?.data.email || "name@flowbite.com"}
+                      </p>
+                    </div>
+                    <ul className="py-2">
+                      <li>
+                        <a
+                          href="#"
+                          className="block px-4 py-2 hover:bg-gray-700"
+                        >
+                          Dashboard
+                        </a>
+                      </li>
+                      <li>
+                        <a
+                          href="#"
+                          className="block px-4 py-2 hover:bg-gray-700"
+                        >
+                          Settings
+                        </a>
+                      </li>
+                      <li>
+                        <a
+                          href="#"
+                          className="block px-4 py-2 hover:bg-gray-700"
+                        >
+                          Earnings
+                        </a>
+                      </li>
+                    </ul>
+                    <div className="border-t border-gray-700">
+                      <button
+                        onClick={LogoutUser}
+                        className="w-full text-left px-4 py-2 hover:bg-gray-700"
+                      >
+                        Sign out
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </div>
       </nav>
