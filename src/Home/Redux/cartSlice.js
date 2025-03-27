@@ -4,7 +4,9 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 export const fetchProducts = createAsyncThunk(
   "cart/fetchProducts",
   async () => {
-    const response = await fetch("http://localhost:3000/api/v1/getProduct");
+    const response = await fetch(
+      `${process.env.REACT_APP_API_URL}/api/v1/getProduct`
+    );
     const data = await response.json();
     return data; // Returning API response
   }

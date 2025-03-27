@@ -39,13 +39,16 @@ export const AuthProvider = ({ children }) => {
     }
 
     try {
-      const response = await fetch("http://localhost:3000/api/v1/profile", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: token ? `Bearer ${token}` : "",
-        },
-      });
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/api/v1/profile`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: token ? `Bearer ${token}` : "",
+          },
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Failed to fetch user details");
