@@ -5,14 +5,29 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(localStorage.getItem("token") || null);
   const [user, setUser] = useState("");
+
+  // const storetokenInLocalStorage = (accessToken) => {
+  //   localStorage.setItem("token", accessToken);
+  //   setToken(accessToken);
+  // };
   const storetokenInLocalStorage = (accessToken) => {
-    localStorage.setItem("token", accessToken);
-    setToken(accessToken);
+    if (accessToken) {
+      localStorage.setItem("token", accessToken);
+      setToken(accessToken);
+    } else {
+      localStorage.removeItem("token");
+      setToken(null);
+    }
   };
   let isLoggedIn = !!token;
+  // const LogoutUser = () => {
+  //   setToken("");
+  //   return localStorage.removeItem("token");
+  // };
   const LogoutUser = () => {
     setToken("");
-    return localStorage.removeItem("token");
+    setUser(""); // Clear user data on logout
+    localStorage.removeItem("token");
   };
 
   //TODO: JWT authentication -to get user details of current Login User
@@ -45,8 +60,12 @@ export const AuthProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    userAuthentication();
-  }, []);
+    if (token) {
+      userAuthentication();
+    } else {
+      setUser("");
+    }
+  }, [token]);
 
   return (
     <AuthContext.Provider

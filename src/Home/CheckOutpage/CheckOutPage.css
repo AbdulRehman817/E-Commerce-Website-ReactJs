@@ -1,0 +1,84 @@
+/* Glassmorphism Card */
+.glassmorphism-card {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  padding: 2rem;
+  width: 100%;
+  max-width: 450px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  text-align: center;
+}
+
+/* Input Fields */
+.input-field {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  outline: none;
+  border-radius: 8px;
+  font-size: 16px;
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  backdrop-filter: blur(5px);
+  transition: 0.3s;
+}
+
+.input-field::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.input-field:focus {
+  background: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+}
+
+/* Buttons */
+.submit-btn,
+.edit-btn {
+  width: 100%;
+  padding: 12px;
+  font-size: 18px;
+  font-weight: bold;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.submit-btn {
+  background: linear-gradient(90deg, #6a5acd, #4b0082);
+}
+
+.submit-btn:hover {
+  background: linear-gradient(90deg, #7b68ee, #483d8b);
+}
+
+.edit-btn {
+  background: linear-gradient(90deg, #00c853, #009688);
+  margin-top: 10px;
+}
+
+.edit-btn:hover {
+  background: linear-gradient(90deg, #1de9b6, #00796b);
+}
+
+/* Moving Car Animation */
+.moving-car {
+  width: 120px;
+  position: absolute;
+  bottom: 0;
+  left: -150px;
+  animation: moveCar 5s linear infinite;
+}
+
+@keyframes moveCar {
+  0% {
+    left: -150px;
+  }
+  100% {
+    left: 100%;
+  }
+}

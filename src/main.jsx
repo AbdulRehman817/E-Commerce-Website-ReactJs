@@ -7,48 +7,59 @@ import Layout from "./Layout.jsx";
 import Home from "./Home/Home.jsx";
 import Login from "./Home/Login/Login.jsx";
 import SingleProduct from "./Home/SingleProduct/SingleProduct.jsx";
-import SingleBestDealProducts from "./Home/SingleBestDealProducts/SingleBestDealProducts.jsx";
-import CheckoutPage from "./Home/ChekoutPage/CheckoutPage.jsx";
+import CheckOut from "./Home/CheckOutpage/CheckOutPage.jsx";
 import Cart from "./Home/Cart.jsx/Cart.jsx";
 import Logout from "./Home/Navbar/Logout.jsx";
-// import Register from "./Home/Register/Register.jsx";
-import { AuthProvider } from "./Home/Redux/auth.jsx";
+import CategoryPage from "./Home/CategoryPage/CategoryPage.jsx";
+import Register from "./Home/Register/Register.jsx";
+import ProtectedRoute from "./Home/AuthContext/proctedRoute.jsx";
+import { AuthProvider } from "./Home/AuthContext/authcontext.jsx";
 import "./index.css";
+import { ToastContainer, Bounce } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-// Define Routes
+// Create Router
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: "",
     element: <Layout />,
     children: [
       {
-        path: "/home",
-        element: <Home />,
-      },
-      {
-        path: "SingleBestDealProducts/:id",
-        element: <SingleBestDealProducts />,
+        element: <ProtectedRoute />, // Protects child routes
+        children: [
+          { path: "/", element: <Home /> },
+          { path: "CheckoutPage", element: <CheckOut /> },
+        ],
       },
       { path: "SingleProduct/:id", element: <SingleProduct /> },
       { path: "cart", element: <Cart /> },
-      { path: "CheckoutPage", element: <CheckoutPage /> },
-      { path: "/Login", element: <Login /> },
       { path: "logout", element: <Logout /> },
+      { path: "category/:slug", element: <CategoryPage /> },
       { path: "*", element: <h1>404 - Not Found</h1> },
     ],
   },
-  // { path: "Register", element: <Register /> },
+  { path: "/Login", element: <Login /> },
+  { path: "Register", element: <Register /> },
 ]);
 
 // Render Application
-
 ReactDOM.createRoot(document.getElementById("root")).render(
   <Provider store={store}>
-    {" "}
-    {/* Redux Provider should be outermost if state management is global */}
+    <ToastContainer />
     <AuthProvider>
-      {" "}
-      {/* Wrap AuthProvider inside Redux Provider */}
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+        transition={Bounce}
+      />
       <RouterProvider router={router} />
     </AuthProvider>
   </Provider>

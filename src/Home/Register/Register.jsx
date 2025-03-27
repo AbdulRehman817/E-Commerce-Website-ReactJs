@@ -1,103 +1,137 @@
-// import React, { useState } from "react";
-// import { useDispatch, useSelector } from "react-redux";
-// import { registerUser } from "../Redux/authSlice";
-// import { useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../AuthContext/authcontext";
+import { toast } from "react-toastify";
 
-// const Register = () => {
-//   const [name, setName] = useState("");
-//   const [email, setEmail] = useState("");
-//   const [password, setPassword] = useState("");
-//   const dispatch = useDispatch();
-//   const navigate = useNavigate();
-//   const { loading, error } = useSelector((state) => state.auth);
+const Register = () => {
+  const [user, setUser] = useState({
+    name: "",
+    email: "",
+    password: "",
+  });
+  const [error, setError] = useState(null);
+  const navigate = useNavigate();
+  const { storetokenInLocalStorage } = useAuth();
 
-//   const handleSubmit = (e) => {
-//     e.preventDefault();
-//     dispatch(registerUser({ name, email, password })).then((result) => {
-//       if (result.meta.requestStatus === "fulfilled") navigate("/");
-//     });
-//   };
+  const handleInput = (e) => {
+    let { name, value } = e.target;
+    setUser((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
 
-//   return (
-//     <div className="flex justify-center items-center min-h-screen bg-gray-100">
-//       <div className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md">
-//         <h2 className="text-2xl font-bold text-center text-blue-600 mb-4">
-//           Create an Account 🚀
-//         </h2>
-//         <p className="text-gray-500 text-center mb-6">
-//           Join us and start your journey today!
-//         </p>
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError(null);
 
-//         {error && (
-//           <p className="text-red-500 text-center text-sm bg-red-100 p-2 rounded-md mb-4">
-//             {error}
-//           </p>
-//         )}
+    try {
+      const response = await fetch("http://localhost:3000/api/v1/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(user),
+      });
 
-//         <form onSubmit={handleSubmit} className="space-y-4">
-//           <div>
-//             <label className="block text-gray-700 font-semibold">Name</label>
-//             <input
-//               type="text"
-//               placeholder="Enter your name"
-//               value={name}
-//               onChange={(e) => setName(e.target.value)}
-//               required
-//               className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all"
-//             />
-//           </div>
+      const res_data = await response.json();
+      console.log("API Response:", res_data);
 
-//           <div>
-//             <label className="block text-gray-700 font-semibold">Email</label>
-//             <input
-//               type="email"
-//               placeholder="Enter your email"
-//               value={email}
-//               onChange={(e) => setEmail(e.target.value)}
-//               required
-//               className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all"
-//             />
-//           </div>
+      if (response.ok && res_data.accessToken) {
+        toast.success("Registration successful");
+        storetokenInLocalStorage(res_data.accessToken);
 
-//           <div>
-//             <label className="block text-gray-700 font-semibold">
-//               Password
-//             </label>
-//             <input
-//               type="password"
-//               placeholder="Create a password"
-//               value={password}
-//               onChange={(e) => setPassword(e.target.value)}
-//               required
-//               className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all"
-//             />
-//           </div>
+        // ✅ Redirect to login after registration
+        navigate("/");
+      } else {
+        setError(res_data.message || "Registration failed. Try again.");
+        toast.error("Registration failed");
+      }
+    } catch (error) {
+      console.error("Registration Error:", error);
+      setError("Something went wrong. Please try again.");
+      toast.error("Something went wrong.");
+    }
+  };
 
-//           <button
-//             type="submit"
-//             className="w-full bg-blue-600 text-white font-semibold p-3 rounded-lg hover:bg-blue-700 transition-all flex items-center justify-center"
-//             disabled={loading}
-//           >
-//             {loading ? (
-//               <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-//             ) : (
-//               "Register"
-//             )}
-//           </button>
-//         </form>
+  return (
+    <div className="flex justify-center items-center min-h-screen bg-gray-100">
+      <div className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md">
+        <h2 className="text-2xl font-bold text-center text-blue-600 mb-4">
+          Create an Account 🚀
+        </h2>
+        <p className="text-gray-500 text-center mb-6">
+          Join us and start your journey today!
+        </p>
 
-//         <p className="text-center text-gray-600 mt-4">
-//           Already have an account?{" "}
-//           <span
-//             onClick={() => navigate("/login")}
-//             className="text-blue-600 font-semibold cursor-pointer hover:underline"
-//           >
-//             Login here
-//           </span>
-//         </p>
-//       </div>
-//     </div>
-//   );
-// };
+        {error && (
+          <p className="text-red-500 text-center text-sm bg-red-100 p-2 rounded-md mb-4">
+            {error}
+          </p>
+        )}
 
-// export default Register;
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="block text-gray-700 font-semibold">Name</label>
+            <input
+              type="text"
+              name="name"
+              placeholder="Enter your name"
+              value={user.name}
+              onChange={handleInput}
+              required
+              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all"
+            />
+          </div>
+
+          <div>
+            <label className="block text-gray-700 font-semibold">Email</label>
+            <input
+              type="email"
+              name="email"
+              placeholder="Enter your email"
+              value={user.email}
+              onChange={handleInput}
+              required
+              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all"
+            />
+          </div>
+
+          <div>
+            <label className="block text-gray-700 font-semibold">
+              Password
+            </label>
+            <input
+              type="password"
+              name="password"
+              placeholder="Create a password"
+              value={user.password}
+              onChange={handleInput}
+              required
+              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all"
+            />
+          </div>
+
+          <button
+            type="submit"
+            className="w-full bg-blue-600 text-white font-semibold p-3 rounded-lg hover:bg-blue-700 transition-all"
+          >
+            Register
+          </button>
+        </form>
+
+        <p className="text-center text-gray-600 mt-4">
+          Already have an account?{" "}
+          <span
+            onClick={() => navigate("/login")}
+            className="text-blue-600 font-semibold cursor-pointer hover:underline"
+          >
+            Login here
+          </span>
+        </p>
+      </div>
+    </div>
+  );
+};
+
+export default Register;

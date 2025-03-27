@@ -1,10 +1,12 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 // Fetch products from API
-export const fetchProducts = createAsyncThunk(
-  "cart/fetchProducts",
+export const fetchBestDealProducts = createAsyncThunk(
+  "cart/fetchBestDealProducts",
   async () => {
-    const response = await fetch("http://localhost:3000/api/v1/getProduct");
+    const response = await fetch(
+      "http://localhost:3000/api/v1/getBestDealProduct"
+    );
     const data = await response.json();
     return data; // Returning API response
   }
@@ -16,7 +18,7 @@ const initialState = {
   totalQuantity: 0,
   totalPrice: 0,
 };
-const cartSlice = createSlice({
+const BestDealcartSlice = createSlice({
   name: "cart",
   initialState,
   reducers: {
@@ -49,7 +51,7 @@ const cartSlice = createSlice({
       state.totalQuantity = totalQuantity;
     },
     removeItem: (state, action) => {
-      state.cart = state.cart.filter((item) => item._id !== action.payload);
+      state.cart = state.cart.filter((item) => item._id === action.payload);
     },
     increaseItemQuantity: (state, action) => {
       const itemIndex = state.cart.findIndex(
@@ -77,7 +79,7 @@ const cartSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(fetchProducts.fulfilled, (state, action) => {
+    builder.addCase(fetchBestDealProducts.fulfilled, (state, action) => {
       state.items = action.payload; // Storing fetched products
     });
   },
@@ -92,6 +94,6 @@ export const {
   setCart,
   clearCart,
   restoreCart,
-} = cartSlice.actions;
+} = BestDealcartSlice.actions;
 
-export default cartSlice.reducer;
+export default BestDealcartSlice.reducer;

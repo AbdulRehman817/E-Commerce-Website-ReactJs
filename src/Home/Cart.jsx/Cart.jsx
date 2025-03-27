@@ -6,7 +6,7 @@ import {
   increaseItemQuantity,
   decreaseItemQuantity,
   setCart,
-} from "../Redux/cartSlice"; // assuming you have a setCart action
+} from "../Redux/cartSlice";
 import { useNavigate } from "react-router-dom";
 
 const CartPage = () => {
@@ -14,23 +14,29 @@ const CartPage = () => {
   const dispatch = useDispatch();
   const { cart = [] } = useSelector((state) => state.allCart) || { cart: [] };
 
-  // Get Total Price
+  // 🟢 Load cart from localStorage on page load
+  useEffect(() => {
+    const savedCart = localStorage.getItem("cart");
+    if (savedCart) {
+      dispatch(setCart(JSON.parse(savedCart)));
+    }
+  }, [dispatch]);
+
+  // **Save cart to localStorage whenever the cart state changes**
+  useEffect(() => {
+    if (cart.length > 0) {
+      localStorage.setItem("cart", JSON.stringify(cart));
+    }
+  }, [cart]);
+
+  // 🟢 Function to remove cart when user logs out
+
+  // 🟢 Get Total Price
   const getTotalPrice = () => {
     return cart
       .reduce((total, item) => total + item.price * item.quantity, 0)
       .toFixed(2);
   };
-
-  // Save cart to localStorage whenever the cart state changes
-
-  // Load cart from localStorage on page load
-  useEffect(() => {
-    const savedCart = localStorage.getItem("cart");
-    if (savedCart) {
-      // Parse the saved cart and set it in Redux
-      dispatch(setCart(JSON.parse(savedCart)));
-    }
-  }, [dispatch]);
 
   return (
     <div className="min-h-screen bg-gray-100 flex justify-center items-center p-6">
@@ -44,7 +50,10 @@ const CartPage = () => {
             <p className="text-gray-500">
               Your cart is empty. Start shopping! 🛍️
             </p>
-            <button className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
+            <button
+              className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+              onClick={() => navigate("/")}
+            >
               Go to Shop
             </button>
           </div>
@@ -73,11 +82,6 @@ const CartPage = () => {
                         <p className="text-gray-800 font-semibold">
                           {item.name}
                         </p>
-                        {item.size && (
-                          <p className="text-gray-500 text-sm">
-                            Size: {item.size}
-                          </p>
-                        )}
                       </div>
                     </td>
                     <td className="text-center text-gray-800">
@@ -107,7 +111,7 @@ const CartPage = () => {
                       <button
                         className="text-gray-500 hover:text-red-500"
                         onClick={() => {
-                          dispatch(removeItem(item._id)); // use item._id or item.id depending on your item structure
+                          dispatch(removeItem(item._id));
                         }}
                       >
                         <FiTrash size={18} />
@@ -119,7 +123,10 @@ const CartPage = () => {
             </table>
 
             <div className="mt-6 flex justify-between items-center border-t pt-4">
-              <button className="text-gray-600 font-semibold hover:underline">
+              <button
+                className="text-gray-600 font-semibold hover:underline"
+                onClick={() => navigate("/")}
+              >
                 CONTINUE SHOPPING
               </button>
               <div>
@@ -137,6 +144,7 @@ const CartPage = () => {
                 GO TO CHECKOUT
               </button>
             </div>
+            <div className="mt-6"></div>
           </>
         )}
       </div>

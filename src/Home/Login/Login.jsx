@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
-import { useAuth } from "../Redux/auth";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../AuthContext/authcontext";
+import { toast } from "react-toastify";
 const Login = () => {
   const [user, setUser] = useState({
     email: "",
@@ -36,19 +37,21 @@ const Login = () => {
       console.log("API Response:", res_data);
 
       if (response.ok && res_data.accessToken) {
-        alert("Login successful");
+        toast.success("Login successful");
         storetokenInLocalStorage(res_data.accessToken);
         console.log(
           "Token stored in localStorage:",
           localStorage.getItem("token")
         );
-        navigate("/home");
+        navigate("/");
       } else {
         setError("Invalid credentials");
+        toast.error("Invalid credentials");
       }
     } catch (error) {
       console.error("Login Error:", error);
       setError("Something went wrong. Please try again.");
+      toast.error("Something went wrong. Please try again.");
     }
   };
 
@@ -98,7 +101,7 @@ const Login = () => {
           </div>
 
           <button
-            onClick={() => navigate("/home")}
+            onClick={() => navigate("/")}
             type="submit"
             className="w-full bg-blue-600 text-white font-semibold p-3 rounded-lg hover:bg-blue-700 transition-all"
           >

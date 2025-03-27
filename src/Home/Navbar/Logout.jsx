@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { Navigate } from "react-router-dom";
-import { useAuth } from "../Redux/auth";
+import { useAuth } from "../AuthContext/authcontext";
 const Logout = () => {
   const { LogoutUser } = useAuth();
 
