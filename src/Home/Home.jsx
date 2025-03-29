@@ -7,7 +7,7 @@ import Product from "./Products/Product";
 import ProductAd from "./ProductAd/ProductAd";
 import Brands from "./Brands/Brands";
 import TestimonialGroupCards from "./Testimonal/Testimonal";
-import Footer from "./Footer/Footer";
+
 import NewsletterSection from "./NewsLetterSection/NewsletterSection";
 
 const Home = () => {
@@ -22,7 +22,6 @@ const Home = () => {
       <Brands />
       <TestimonialGroupCards />
       <NewsletterSection />
-      <Footer />
     </div>
   );
 };

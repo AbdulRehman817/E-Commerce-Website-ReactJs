@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../AuthContext/authcontext";
 import { toast } from "react-toastify";
+const API_URL = import.meta.env.VITE_BACKEND_URL;
 const Login = () => {
   const [user, setUser] = useState({
     email: "",
@@ -25,16 +26,13 @@ const Login = () => {
     setError(null);
 
     try {
-      const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/api/v1/login`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(user),
-        }
-      );
+      const response = await fetch(`${API_URL}/api/v1/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(user),
+      });
 
       const res_data = await response.json();
       console.log("API Response:", res_data);

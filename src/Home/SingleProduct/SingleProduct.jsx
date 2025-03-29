@@ -178,6 +178,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+const API_URL = import.meta.env.VITE_BACKEND_URL;
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProducts } from "../Redux/cartSlice";
@@ -203,7 +204,7 @@ const SingleProduct = () => {
   useEffect(() => {
     if (id) {
       axios
-        .get(`http://localhost:3000/api/v1/getProduct/${id}`)
+        .get(`${API_URL}/api/v1/getProduct/${id}`)
         .then((res) => setData(res.data.product))
         .catch((error) => console.log(error));
     }
@@ -219,7 +220,7 @@ const SingleProduct = () => {
     try {
       const token = localStorage.getItem("token");
       await axios.post(
-        "http://localhost:3000/api/v1/cart",
+        `${API_URL}/api/v1/cart`,
         { productId: data._id, quantity },
         { headers: { Authorization: `Bearer ${token}` } }
       );

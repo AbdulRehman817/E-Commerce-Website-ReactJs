@@ -1,15 +1,11 @@
 import { createContext, useContext, useEffect, useState } from "react";
-
+const API_URL = import.meta.env.VITE_BACKEND_URL;
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(localStorage.getItem("token") || null);
   const [user, setUser] = useState("");
 
-  // const storetokenInLocalStorage = (accessToken) => {
-  //   localStorage.setItem("token", accessToken);
-  //   setToken(accessToken);
-  // };
   const storetokenInLocalStorage = (accessToken) => {
     if (accessToken) {
       localStorage.setItem("token", accessToken);
@@ -20,17 +16,12 @@ export const AuthProvider = ({ children }) => {
     }
   };
   let isLoggedIn = !!token;
-  // const LogoutUser = () => {
-  //   setToken("");
-  //   return localStorage.removeItem("token");
-  // };
+
   const LogoutUser = () => {
     setToken("");
     setUser(""); // Clear user data on logout
     localStorage.removeItem("token");
   };
-
-  //TODO: JWT authentication -to get user details of current Login User
 
   const userAuthentication = async () => {
     if (!token) {
@@ -39,16 +30,13 @@ export const AuthProvider = ({ children }) => {
     }
 
     try {
-      const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/api/v1/profile`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: token ? `Bearer ${token}` : "",
-          },
-        }
-      );
+      const response = await fetch(`${API_URL}/api/v1/profile`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token ? `Bearer ${token}` : "",
+        },
+      });
 
       if (!response.ok) {
         throw new Error("Failed to fetch user details");
