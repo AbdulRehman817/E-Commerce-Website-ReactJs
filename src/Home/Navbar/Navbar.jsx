@@ -177,10 +177,10 @@ const Navbar = () => {
 
         {/* Desktop Navigation Links */}
         <div className="hidden lg:flex space-x-6 text-white text-sm font-medium">
-          <Link to="#" className="hover:text-lime-300">
+          <Link to="/" className="hover:text-lime-300">
             All products
           </Link>
-          <Link to="/home-appliances" className="hover:text-lime-300">
+          <Link to="#" className="hover:text-lime-300">
             Home appliances
           </Link>
           <Link to="#" className="hover:text-lime-300">

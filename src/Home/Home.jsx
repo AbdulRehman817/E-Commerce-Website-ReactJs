@@ -13,39 +13,35 @@ const Home = () => {
 
   return (
     <div className="bg-[#f7fbfc] w-full overflow-hidden">
-      {/* Hero Section */}
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <Hero />
-      </div>
+      {/* Wrapper for Consistent Layout */}
+      <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+        <section>
+          <Hero />
+        </section>
 
-      {/* Ad Banners */}
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <AdBanners />
-      </div>
+        <section>
+          <AdBanners />
+        </section>
 
-      {/* Product Advertisement */}
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <ProductAd />
-      </div>
+        <section>
+          <ProductAd />
+        </section>
 
-      {/* Products */}
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <Product />
-      </div>
+        <section>
+          <Product />
+        </section>
 
-      {/* Brands */}
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <Brands />
-      </div>
+        <section>
+          <Brands />
+        </section>
 
-      {/* Testimonials */}
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <TestimonialGroupCards />
-      </div>
+        <section>
+          <TestimonialGroupCards />
+        </section>
 
-      {/* Newsletter */}
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <NewsletterSection />
+        <section>
+          <NewsletterSection />
+        </section>
       </div>
     </div>
   );
