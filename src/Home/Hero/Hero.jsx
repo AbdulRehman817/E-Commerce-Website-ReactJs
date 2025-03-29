@@ -19,111 +19,101 @@ const Hero = () => {
   }, []);
 
   return (
-    <div
-      className="hero min-h-screen bg-center relative"
-      style={{
-        backgroundImage:
-          "url(https://websitedemos.net/electronic-store-04/wp-content/uploads/sites/1055/2022/03/electronic-store-hero-image.jpg)",
-        backgroundSize: "cover",
-        backgroundRepeat: "no-repeat",
-        backgroundPosition: "center",
-      }}
-    >
-      <div className="hero-overlay bg-opacity-60"></div>
-
-      {/* Hero Content */}
-      <section className="flex justify-start bg-white py-10 w-full max-w-[90%] sm:max-w-[450px] mx-auto lg:mr-6 lg:ml-auto relative top-24 px-6 rounded-lg shadow-lg">
-        <div className="flex flex-col">
-          <div className="mb-6">
-            <img
-              src="https://websitedemos.net/electronic-store-04/wp-content/uploads/sites/1055/2022/03/electronic-store-brand-logo-00.png"
-              alt="Logo"
-              className="h-12 object-contain w-[30%]"
-            />
-          </div>
-          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 leading-snug mb-4">
+    <div className="w-full overflow-hidden bg-[#f7fbfc]">
+      {/* Hero Section */}
+      <div
+        className="hero min-h-screen flex items-center justify-center bg-cover bg-center relative"
+        style={{
+          backgroundImage:
+            "url(https://websitedemos.net/electronic-store-04/wp-content/uploads/sites/1055/2022/03/electronic-store-hero-image.jpg)",
+        }}
+      >
+        <div className="bg-white p-6 sm:p-8 rounded-lg shadow-lg max-w-sm sm:max-w-md">
+          <img
+            src="https://websitedemos.net/electronic-store-04/wp-content/uploads/sites/1055/2022/03/electronic-store-brand-logo-00.png"
+            alt="Logo"
+            className="h-10 w-auto mb-4"
+          />
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">
             The best home <br /> entertainment system is here
           </h1>
-          <p className="text-gray-500 text-sm sm:text-base mb-6">
+          <p className="text-gray-500 text-sm sm:text-base mb-4">
             Sit diam odio eget rhoncus volutpat est nibh velit posuere egestas.
           </p>
-          <a
-            href="#"
-            className="text-blue-500 text-lg font-medium hover:underline"
-          >
+          <a href="#" className="text-blue-500 font-medium hover:underline">
             Shop now
           </a>
         </div>
-      </section>
+      </div>
 
       {/* Services Section */}
-      <div className="bg-white flex flex-wrap justify-center relative top-[110px] mb-5 px-4 py-6 gap-4 sm:gap-6 md:gap-8 lg:gap-12 rounded-lg shadow-lg w-[90%] mx-auto">
+      <div className="bg-white w-[90%] max-w-screen-lg mx-auto p-6 rounded-lg shadow-md grid grid-cols-2 sm:grid-cols-4 gap-4">
         {[
           {
-            icon: <FaShippingFast className="w-10 h-10 text-blue-700" />,
+            icon: <FaShippingFast className="w-8 h-8 text-blue-700" />,
             title: "Free Shipping",
-            desc: "When you spend $80 or more",
+            desc: "On orders above $80",
           },
           {
             icon: (
-              <IoChatbubbleEllipsesSharp className="w-10 h-10 text-blue-700" />
+              <IoChatbubbleEllipsesSharp className="w-8 h-8 text-blue-700" />
             ),
-            title: "We are available 24/7",
-            desc: "Need help? Contact us anytime",
+            title: "24/7 Support",
+            desc: "Contact us anytime",
           },
           {
-            icon: <VscDebugRestart className="w-10 h-10 text-blue-700" />,
-            title: "Satisfied or return",
-            desc: "Easy 30-day return policy",
+            icon: <VscDebugRestart className="w-8 h-8 text-blue-700" />,
+            title: "Easy Returns",
+            desc: "30-day return policy",
           },
           {
-            icon: <MdPayment className="w-10 h-10 text-blue-700" />,
-            title: "100% Secure Payments",
-            desc: "Visa, Mastercard, Stripe, PayPal",
+            icon: <MdPayment className="w-8 h-8 text-blue-700" />,
+            title: "Secure Payments",
+            desc: "Visa, Mastercard, PayPal",
           },
         ].map((item, index) => (
-          <div
-            key={index}
-            className="flex items-center space-x-4 w-full sm:w-auto"
-          >
+          <div key={index} className="flex items-center space-x-3">
             {item.icon}
             <div>
-              <h3 className="text-sm sm:text-[14px] font-semibold text-[#27323f]">
+              <h3 className="text-sm font-semibold text-gray-800">
                 {item.title}
               </h3>
-              <p className="text-[#9ca7ab] text-xs sm:text-sm">{item.desc}</p>
+              <p className="text-xs text-gray-500">{item.desc}</p>
             </div>
           </div>
         ))}
       </div>
 
       {/* Categories Section */}
-      <div className="bg-[#f7fbfc] min-h-screen p-4 pt-20">
-        <div className="mt-[50px] bg-white flex flex-wrap justify-center gap-4 sm:gap-6 md:gap-8 border border-gray-300 p-4 md:p-6 w-[90%] mx-auto rounded-lg shadow-md">
+      <div className="py-12">
+        <div className="bg-white p-6 max-w-screen-xl mx-auto rounded-lg shadow-md">
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-800 text-center mb-6">
+            Browse Categories
+          </h2>
           {categories.length > 0 ? (
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
               {categories.map((category) => (
                 <div
                   key={category.id}
-                  className="rounded-lg flex flex-col items-center p-4 cursor-pointer w-full sm:w-48 md:w-60 lg:w-72 bg-gray-50 hover:bg-gray-100 transition-shadow shadow-sm hover:shadow-lg"
+                  className="rounded-lg flex flex-col items-center p-4 cursor-pointer bg-gray-50 hover:bg-gray-100 transition-shadow shadow-sm hover:shadow-lg"
                   onClick={() => navigate(`/category/${category.name}`)}
                 >
                   <img
                     src={category.image}
                     alt={category.name}
-                    className="w-full h-28 sm:h-32 md:h-40 object-cover mb-4 rounded"
+                    className="w-full h-24 sm:h-32 object-cover mb-3 rounded"
                   />
                   <h3 className="text-sm sm:text-lg font-semibold text-gray-700 text-center">
                     {category.name}
                   </h3>
-                  <p className="text-gray-500 text-xs sm:text-sm">
+                  <p className="text-xs sm:text-sm text-gray-500">
                     {category.products} Products
                   </p>
                 </div>
               ))}
             </div>
           ) : (
-            <p className="text-gray-500 text-center">Loading...</p>
+            <p className="text-gray-500 text-center">Loading categories...</p>
           )}
         </div>
       </div>
