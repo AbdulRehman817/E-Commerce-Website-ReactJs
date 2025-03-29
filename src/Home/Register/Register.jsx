@@ -27,7 +27,7 @@ const Register = () => {
 
     try {
       const response = await fetch(
-        `${process.env.VITE_BACKEND_URL}/api/v1/register`,
+        `https://backend-for-e-commerce-website-slnb.vercel.app/api/v1/register`,
         {
           method: "POST",
           headers: {

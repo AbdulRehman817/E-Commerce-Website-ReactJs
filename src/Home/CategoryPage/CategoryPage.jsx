@@ -123,7 +123,9 @@ const Categories = () => {
   const navigate = useNavigate();
   // Fetch categories
   useEffect(() => {
-    fetch(`${process.env.REACT_APP_API_URL}/api/v1/categories`)
+    fetch(
+      `https://backend-for-e-commerce-website-slnb.vercel.app/api/v1/categories`
+    )
       .then((res) => res.json())
       .then((data) => setCategories(data))
       .catch((err) => console.error("Error fetching categories:", err));

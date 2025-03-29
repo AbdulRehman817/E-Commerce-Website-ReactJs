@@ -151,7 +151,9 @@ const Hero = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch(`${process.env.VITE_BACKEND_URL}/api/v1/categories`)
+    fetch(
+      `https://backend-for-e-commerce-website-slnb.vercel.app/api/v1/categories`
+    )
       .then((res) => res.json())
       .then((data) => setCategories(data))
       .catch((err) => console.error("Error fetching categories:", err));

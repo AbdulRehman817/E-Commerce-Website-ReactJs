@@ -204,7 +204,9 @@ const SingleProduct = () => {
   useEffect(() => {
     if (id) {
       axios
-        .get(`${process.env.VITE_BACKEND_URL}/api/v1/getProduct/${id}`)
+        .get(
+          `https://backend-for-e-commerce-website-slnb.vercel.app/api/v1/getProduct/${id}`
+        )
         .then((res) => setData(res.data.product))
         .catch((error) => console.log(error));
     }
@@ -220,7 +222,7 @@ const SingleProduct = () => {
     try {
       const token = localStorage.getItem("token");
       await axios.post(
-        `${process.env.VITE_BACKEND_URL}/api/v1/cart`,
+        `https://backend-for-e-commerce-website-slnb.vercel.app/api/v1/cart`,
         { productId: data._id, quantity },
         { headers: { Authorization: `Bearer ${token}` } }
       );
