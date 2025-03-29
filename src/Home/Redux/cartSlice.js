@@ -1,11 +1,12 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-const API_URL = import.meta.env.VITE_BACKEND_URL;
 
 // Fetch products from API
 export const fetchProducts = createAsyncThunk(
   "cart/fetchProducts",
   async () => {
-    const response = await fetch(`${API_URL}/api/v1/getProduct`);
+    const response = await fetch(
+      `${process.env.VITE_BACKEND_URL}/api/v1/getProduct`
+    );
     const data = await response.json();
     return data; // Returning API response
   }

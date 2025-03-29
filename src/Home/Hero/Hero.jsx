@@ -151,7 +151,7 @@ const Hero = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch(`${process.env.REACT_APP_API_URL}/api/v1/categories`)
+    fetch(`${process.env.VITE_BACKEND_URL}/api/v1/categories`)
       .then((res) => res.json())
       .then((data) => setCategories(data))
       .catch((err) => console.error("Error fetching categories:", err));
