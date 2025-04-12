@@ -12,9 +12,7 @@ const Home = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="bg-[#f7fbfc] w-full overflow-hidden">
-      {/* Wrapper for Consistent Layout */}
-      <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+    
         <section>
           <Hero />
         </section>
@@ -42,8 +40,7 @@ const Home = () => {
         <section>
           <NewsletterSection />
         </section>
-      </div>
-    </div>
+      
   );
 };
 
