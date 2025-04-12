@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
 // Fetch products from API
 export const fetchProducts = createAsyncThunk(
@@ -13,10 +13,12 @@ export const fetchProducts = createAsyncThunk(
 );
 
 const initialState = {
-  cart: [],
-  items: [], // Empty initially
-  totalQuantity: 0,
-  totalPrice: 0,
+  cart: [],           // Cart items
+  items: [],          // All fetched products
+  totalQuantity: 0,   // Total items in the cart
+  totalPrice: 0,      // Total price of items in the cart
+  searchTerm: '',     // Search term for filtering products
+  filteredProducts: [], //filter products according to user search
 };
 const cartSlice = createSlice({
   name: "cart",
@@ -24,51 +26,57 @@ const cartSlice = createSlice({
   reducers: {
     addToCart: (state, action) => {
       let existingItem = state.cart.findIndex(
-        (items) => items.id === action.payload.id
+        (item) => item._id === action.payload._id
       );
 
-      state.cart.push({ ...action.payload, quantity: 1 });
-      localStorage.setItem("cart", JSON.stringify(state.cart)); // Save to localStorage
+      if (existingItem >= 0) {
+        state.cart[existingItem].quantity += 1;
+      } else {
+        state.cart.push({ ...action.payload, quantity: 1 });
+      }
+      localStorage.setItem('cart', JSON.stringify(state.cart));
     },
     setCart: (state, action) => {
       state.cart = action.payload;
     },
     getCartTotal: (state) => {
-      let { totalQuantity, totalPrice } = state.cart.reduce(
+      let { totalPrice, totalQuantity } = state.cart.reduce(
         (cartTotal, cartItem) => {
           const { price, quantity } = cartItem;
           const itemTotal = price * quantity;
-          cartTotal.totalPrice += itemTotal;
           cartTotal.totalQuantity += quantity;
+          cartTotal.totalPrice += itemTotal;
           return cartTotal;
         },
         {
-          totalPrice: 0,
           totalQuantity: 0,
+          totalPrice: 0,
         }
       );
-      state.totalPrice = parseInt(totalPrice.toFixed(2));
       state.totalQuantity = totalQuantity;
+      state.totalPrice = parseInt(totalPrice.toFixed(2));
     },
     removeItem: (state, action) => {
       state.cart = state.cart.filter((item) => item._id !== action.payload);
     },
     increaseItemQuantity: (state, action) => {
       const itemIndex = state.cart.findIndex(
-        (item) => item.id === action.payload.id
+        (item) => item._id === action.payload._id
       );
       if (itemIndex >= 0) {
         state.cart[itemIndex].quantity += 1;
       }
     },
-
     decreaseItemQuantity: (state, action) => {
       const itemIndex = state.cart.findIndex(
-        (item) => item.id === action.payload.id
+        (item) => item._id === action.payload._id
       );
       if (itemIndex >= 0 && state.cart[itemIndex].quantity > 1) {
         state.cart[itemIndex].quantity -= 1;
       }
+    },
+    setSearchTerm: (state, action) => {
+      state.searchTerm = action.payload;
     },
     clearCart: (state) => {
       state.cart = [];
@@ -80,20 +88,22 @@ const cartSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(fetchProducts.fulfilled, (state, action) => {
-      state.items = action.payload; // Storing fetched products
+      state.items = action.payload.products; // Assuming API returns { products: [...] }
     });
   },
 });
 
 export const {
+  setSearchTerm,
+  filterProducts,
+  restoreCart,
+  setCart,
+  clearCart,
+  decreaseItemQuantity,
+  increaseItemQuantity,
   addToCart,
   getCartTotal,
   removeItem,
-  increaseItemQuantity,
-  decreaseItemQuantity,
-  setCart,
-  clearCart,
-  restoreCart,
 } = cartSlice.actions;
 
 export default cartSlice.reducer;
