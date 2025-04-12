@@ -12,6 +12,7 @@ const Home = () => {
   const navigate = useNavigate();
 
   return (
+<>
     
         <section>
           <Hero />
@@ -40,7 +41,7 @@ const Home = () => {
         <section>
           <NewsletterSection />
         </section>
-      
+      </>
   );
 };
 
