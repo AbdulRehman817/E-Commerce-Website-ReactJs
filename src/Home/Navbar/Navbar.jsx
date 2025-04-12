@@ -1,10 +1,13 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { useAuth } from "../AuthContext/authcontext";
+import { useDispatch } from "react-redux";
+import { setSearchTerm } from "../Redux/cartSlice";
 import {
   FaBars,
   FaTimes,
+  FaArrowLeft,
   FaShoppingCart,
   FaSearch,
 } from "react-icons/fa";
@@ -15,7 +18,9 @@ const Navbar = () => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [mobileSearchTerm, setMobileSearchTerm] = useState("");
   const searchInputRef = useRef(null);
+  const dispatch = useDispatch();
 
   const SignoutUser = () => {
     LogoutUser();
@@ -36,12 +41,23 @@ const Navbar = () => {
         </div>
         {/* Search Bar (Mobile) */}
         <div className="lg:hidden relative">
-          <div
-            className="cursor-pointer"
-            onClick={() => setIsSearchOpen(!isSearchOpen)}
-          >
-            <FaSearch className="text-white text-xl" />
-          </div>
+        {isSearchOpen ? (
+            <div className="flex items-center gap-3">
+              <button onClick={() => setIsSearchOpen(false)}>
+                <FaArrowLeft className="text-white text-xl" />
+              </button>
+              <input
+                type="text"
+                placeholder="Search products..."
+                className="w-full p-2 border border-gray-300 rounded-md text-black"
+                value={mobileSearchTerm}
+                onChange={(e) => setMobileSearchTerm(e.target.value)}
+              />
+            </div>
+          ) : (
+            <FaSearch className="text-white text-xl" onClick={() => setIsSearchOpen(true)} />
+          )}
+          
           {isSearchOpen && (
             <div className="absolute top-full left-0 w-full z-50">
               <input
@@ -56,24 +72,24 @@ const Navbar = () => {
         {/* Desktop Navigation Links */}
         <div className="hidden lg:flex space-x-6 text-white text-sm font-medium">
           <Link to="/" className="hover:text-lime-300">
-            All products
+            All Products
           </Link>
-          <Link to="#" className="hover:text-lime-300">
+          <Link to="/home-appliances" className="hover:text-lime-300">
             Home appliances
           </Link>
-          <Link to="#" className="hover:text-lime-300">
+          <Link to="/audio-video" className="hover:text-lime-300">
             Audio & video
           </Link>
-          <Link to="#" className="hover:text-lime-300">
+          <Link to="/refrigerator" className="hover:text-lime-300">
             Refrigerator
           </Link>
-          <Link to="#" className="hover:text-lime-300">
+          <Link to="/new-arrivals" className="hover:text-lime-300">
             New arrivals
           </Link>
-          <Link to="#" className="hover:text-lime-300">
+          <Link to="/today-deals" className="hover:text-lime-300">
             Today's deal
           </Link>
-          <Link to="#" className="hover:text-lime-300">
+          <Link to="/gift-cards" className="hover:text-lime-300">
             Gift cards
           </Link>
         </div>
@@ -83,6 +99,14 @@ const Navbar = () => {
           {/* Search Bar (Desktop) */}
           <div className="hidden lg:block relative">
             <input
+              onChange={(e) => {
+                const term = e.target.value;
+
+                dispatch(setSearchTerm(term));
+
+                navigate("/");
+                console.log(term);
+              }}
               type="text"
               placeholder="Search products..."
               ref={searchInputRef}
@@ -180,25 +204,25 @@ const Navbar = () => {
         </button>
         <div className="flex flex-col space-y-4 p-6 mt-12 text-white font-medium">
           <Link to="/" className="hover:text-lime-300">
-            All products
+            All Products
           </Link>
-          <Link to="#" className="hover:text-lime-300">
+          <Link to="/home-appliances" className="hover:text-lime-300">
             Home appliances
 
           </Link>
-          <Link to="#" className="hover:text-lime-300">
+          <Link to="/audio-video" className="hover:text-lime-300">
             Audio & video
           </Link>
-          <Link to="#" className="hover:text-lime-300">
+          <Link to="/refrigerator" className="hover:text-lime-300">
             Refrigerator
           </Link>
-          <Link to="#" className="hover:text-lime-300">
+          <Link to="/new-arrivals" className="hover:text-lime-300">
             New arrivals
           </Link>
-          <Link to="#" className="hover:text-lime-300">
+          <Link to="/today-deals" className="hover:text-lime-300">
             Today's deal
           </Link>
-          <Link to="#" className="hover:text-lime-300">
+          <Link to="/gift-cards" className="hover:text-lime-300">
             Gift cards
           </Link>
         </div>
@@ -207,6 +231,12 @@ const Navbar = () => {
       {isSearchOpen && (
         <div className="lg:hidden flex justify-center p-2 w-full">
           <input
+            onChange={(e) => {
+              const term = e.target.value;
+              dispatch(setSearchTerm(term));
+
+              navigate("/");
+            }}
             type="text"
             placeholder="Search products..."
             className="w-full p-2 border border-gray-300 rounded-md"
