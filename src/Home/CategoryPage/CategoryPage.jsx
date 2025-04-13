@@ -1,10 +1,26 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { FaSearch } from "react-icons/fa";
 
 const Categories = () => {
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [products, setProducts] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [priceRange, setPriceRange] = useState({ min: 0, max: 1000 });
+  const [avgRating, setAvgRating] = useState(0);
+
+  const handleSearchChange = (event) => {
+    setSearchQuery(event.target.value);
+  };
+
+  const handlePriceRangeChange = (event) => {
+    const { name, value } = event.target;
+    setPriceRange({ ...priceRange, [name]: Number(value) });
+  };
+  const handleAvgRatingChange = (event) => setAvgRating(Number(event.target.value))
+
   const navigate = useNavigate();
 
   // Fetch categories
@@ -26,7 +42,7 @@ const Categories = () => {
       )}`
     )
       .then((res) => res.json())
-      .then((data) => setProducts(data.products))
+      .then((data) => {setProducts(data.products); setFilteredProducts(data.products);})
       .catch((err) => console.error("Error fetching products:", err));
   };
 
@@ -34,9 +50,41 @@ const Categories = () => {
     navigate(`/SingleProduct/${id}`);
   };
 
+  useEffect(() => {
+    const filtered = products.filter((product) => {
+      const nameMatch = product.name
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase());
+
+      const priceMatch =
+        product.price >= priceRange.min && product.price <= priceRange.max;
+      const ratingMatch = !avgRating || product.averageRating >= avgRating;
+
+      return nameMatch && priceMatch && ratingMatch;
+    });
+
+    setFilteredProducts(filtered);
+  }, [searchQuery, priceRange, products, avgRating]);
+
+  const renderStarRating = (rating) => {
+    const filledStars = Math.round(rating);
+    const emptyStars = 5 - filledStars;
+    return (
+      <div className="flex items-center text-yellow-500">
+        {Array.from({ length: filledStars }, (_, i) => (
+          <span key={`filled-${i}`}>★</span>
+        ))}
+        {Array.from({ length: emptyStars }, (_, i) => (
+          <span key={`empty-${i}`} className="text-gray-300">
+            ★
+          </span>
+        ))}
+      </div>
+    );
+  };
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="flex flex-col md:flex-row gap-8">
+      <div className="flex flex-col lg:flex-row gap-8">
         {/* Sidebar */}
         <div className="w-full md:w-1/4 bg-white p-4 rounded-lg shadow-md">
           <div className="mb-8">
@@ -63,12 +111,48 @@ const Categories = () => {
           </div>
 
           <div className="mb-8">
-            <h2 className="text-xl font-bold mb-4">Filter by price</h2>
-            {/* Price filter can be added here */}
+          <h2 className="text-xl font-bold mb-4">Filter by Price</h2>
+          <div className="flex gap-2 mb-4">
+            <input
+              type="number"
+              name="min"
+              placeholder="Min"
+              value={priceRange.min}
+              onChange={handlePriceRangeChange}
+              className="w-full p-2 border rounded"
+            />
+            <input
+              type="number"
+              name="max"
+              placeholder="Max"
+              value={priceRange.max}
+              onChange={handlePriceRangeChange}
+              className="w-full p-2 border rounded"
+            />
+          </div>
           </div>
 
-          <div>
-            <h3 className="text-lg font-bold mb-4">Average rating</h3>
+          <div className="mb-8">
+            <h3 className="text-lg font-bold mb-2">Average Rating</h3>
+            <select
+              value={avgRating}
+              onChange={handleAvgRatingChange}
+              className="w-full p-2 border rounded"
+            >
+               <option value={0}>All</option>
+              <option value={1}>1 Star & Above</option>
+              <option value={2}>2 Stars & Above</option>
+              <option value={3}>3 Stars & Above</option>
+              <option value={4}>4 Stars & Above</option>
+              <option value={5}>5 Stars</option>
+            </select>
+          </div>
+
+          <div className="flex items-center bg-gray-100 rounded-full px-4 py-2">
+             <FaSearch className="text-gray-500 mr-2" />
+          <input
+            type="text"  placeholder="Search by product name" value={searchQuery} onChange={handleSearchChange}  className="bg-transparent outline-none w-full"/>
+
             {/* Rating filter can be added here */}
           </div>
         </div>
@@ -81,15 +165,15 @@ const Categories = () => {
           <p className="text-gray-600 mb-6">
             {selectedCategory
               ? "Browse our best deals and premium collections."
-              : "Please select a category to view products"}
+              : "Please select a category to view products."}
           </p>
 
           {selectedCategory && (
             <div className="mb-6">
               <p className="text-gray-600">
-                Showing all {products.length} results
+                Showing all {filteredProducts.length} results
               </p>
-            </div>
+            </div> 
           )}
 
           {/* Product Grid */}
@@ -106,7 +190,7 @@ const Categories = () => {
                   className="w-full h-56 sm:h-64 object-cover rounded-lg"
                 />
                 <div className="mt-4">
-                  <div className="flex items-center text-yellow-500">★★★★★</div>
+                   {renderStarRating(product.averageRating)}
                   <h3 className="text-base sm:text-lg font-bold text-gray-800 mt-2">
                     {product.name}
                   </h3>
@@ -123,7 +207,7 @@ const Categories = () => {
             ))}
           </div>
 
-          {products.length === 0 && selectedCategory && (
+          {filteredProducts.length === 0 && selectedCategory && (
             <p className="text-gray-500 mt-6">No products found.</p>
           )}
         </div>
