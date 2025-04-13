@@ -12,7 +12,7 @@ import {
   FaBars,
 } from "react-icons/fa";
 
-import SearchModal from "./SearchModal";
+import SearchModal from "./searchModal";
 
 const Navbar = () => {
   const { isLoggedIn, LogoutUser, user } = useAuth();
