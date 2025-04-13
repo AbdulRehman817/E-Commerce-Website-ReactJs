@@ -18,7 +18,7 @@ const Navbar = () => {
   const { isLoggedIn, LogoutUser, user } = useAuth();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
+  const items = useSelector((state) => state.allCart?.items || []);
   const products = useSelector((state) => state.allCart?.items || []);
   const searchTerm = useSelector((state) => state.allCart?.searchTerm || "");
   const [showModal, setShowModal] = useState(false);
