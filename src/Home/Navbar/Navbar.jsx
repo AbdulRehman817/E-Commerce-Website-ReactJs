@@ -12,22 +12,20 @@ import {
   FaBars,
 } from "react-icons/fa";
 
-import SearchModal from "./searchModal";
+import SearchModal from "./SearchModal";
 
 const Navbar = () => {
   const { isLoggedIn, LogoutUser, user } = useAuth();
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const items = useSelector((state) => state.allCart?.items || []);
+  const products = useSelector((state) => state.allCart?.items || []);
   const searchTerm = useSelector((state) => state.allCart?.searchTerm || "");
   const [showModal, setShowModal] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [mobileSearchTerm, setMobileSearchTerm] = useState("");
   const searchInputRef = useRef(null);
-
   useEffect(() => {
     dispatch(fetchProducts());
   }, [dispatch]);
@@ -35,7 +33,7 @@ const Navbar = () => {
   // Filter products based on search term
   const filteredProducts = items.filter((product) => {
     return product.name.toLowerCase().includes(searchTerm.toLowerCase());
-  });
+  }).slice(0, 5);;
 
   const handleSearchInputChange = (e) => {
     const term = e.target.value;
@@ -47,49 +45,26 @@ const Navbar = () => {
     navigate("/login");
   };
 
+  const handleSearchIconClick = () => {
+    setIsSearchOpen(true);
+    setShowModal(true)
+  };
+  const handleCloseModal = ()=>{
+      setShowModal(false);
+      setIsSearchOpen(false)
+      dispatch(setSearchTerm(""))
+  }
   return (
     <nav className="bg-blue-500 px-4 py-4 shadow-md w-full">
       <div className="flex items-center justify-between max-w-7xl mx-auto relative">
         {/* Logo Section */}
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 bg-lime-400 rounded-full flex items-center justify-center">
-            <span className="text-white font-bold text-xl">o</span>
+            <span className="text-white font-bold text-xl">o</span>      
           </div>
           <Link to="/" className="text-white font-bold text-lg">
             tronmart
           </Link>
-        </div>
-        {/* Search Bar (Mobile) */}
-        <div className="lg:hidden relative">
-          {isSearchOpen ? (
-            <div className="flex items-center gap-3">
-              <button onClick={() => setIsSearchOpen(false)}>
-                <FaArrowLeft className="text-white text-xl" />
-              </button>
-              <input
-                type="text"
-                placeholder="Search products..."
-                className="w-full p-2 border border-gray-300 rounded-md text-black"
-                value={mobileSearchTerm}
-                onChange={(e) => setMobileSearchTerm(e.target.value)}
-              />
-            </div>
-          ) : (
-            <FaSearch
-              className="text-white text-xl"
-              onClick={() => setIsSearchOpen(true)}
-            />
-          )}
-
-          {isSearchOpen && (
-            <div className="absolute top-full left-0 w-full z-50">
-              <input
-                type="text"
-                placeholder="Search products..."
-                className="w-full p-2 border border-gray-300 rounded-md"
-              />
-            </div>
-          )}
         </div>
 
         {/* Desktop Navigation Links */}
@@ -119,28 +94,34 @@ const Navbar = () => {
 
         {/* Right Section: Cart, Profile, Mobile Menu */}
         <div className="flex items-center space-x-6">
-          {/* Search Bar (Desktop) */}
-          <div className="hidden lg:block relative">
-            {showModal && (
-              <SearchModal
-                filteredProducts={filteredProducts}
-                closeModal={() => setShowModal(false)}
-              />
-            )}
-            <input
-              onChange={(e) => {
-                handleSearchInputChange(e);
-                setShowModal(true);
-                if (!e.target.value) setShowModal(false);
-              }}
+            <div className="relative">
+                <FaSearch className="text-white text-xl cursor-pointer" onClick={handleSearchIconClick} />
+             </div>
+          {showModal && (
+            <SearchModal
+              filteredProducts={filteredProducts}
+              closeModal={handleCloseModal}
+            />
+          )}
+          <div className={`w-full lg:hidden absolute top-12 left-0 z-50 transition-all duration-300 ${isSearchOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`}>
+          <input
+             onChange={(e) => {
+              handleSearchInputChange(e);
+             }}
               type="text"
               placeholder="Search products..."
-              ref={searchInputRef}
-              className="p-2 border border-gray-300 rounded-md w-64"
+              className={`w-full p-2 border border-gray-300 rounded-md`}
             />
-            <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-              <FaSearch className="text-gray-400" />
-            </div>
+           </div>
+          {/* Search Bar  */}
+          <div className="hidden lg:block relative">
+            <input
+             onChange={(e) => {
+              handleSearchInputChange(e);
+               setShowModal(true);
+              }}
+              type="text"
+              placeholder="Search products..." className="p-2 border border-gray-300 rounded-md w-64" />
           </div>
 
           {/* Cart Icon */}
@@ -205,8 +186,8 @@ const Navbar = () => {
           {/* Mobile Menu Button */}
           <div
             className="lg:hidden cursor-pointer"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-          >
+            onClick={() => setIsMenuOpen(!isMenuOpen)}>
+        
             {isMenuOpen ? (
               <FaTimes className="text-white text-2xl" />
             ) : (
@@ -234,6 +215,7 @@ const Navbar = () => {
           </Link>
           <Link to="/home-appliances" className="hover:text-lime-300">
             Home appliances
+
           </Link>
           <Link to="/audio-video" className="hover:text-lime-300">
             Audio & video
@@ -252,17 +234,6 @@ const Navbar = () => {
           </Link>
         </div>
       </div>
-      {/* Search Bar (Desktop) */}
-      {isSearchOpen && (
-        <div className="lg:hidden flex justify-center p-2 w-full">
-          <input
-            onChange={handleSearchInputChange}
-            type="text"
-            placeholder="Search products..."
-            className="w-full p-2 border border-gray-300 rounded-md"
-          />
-        </div>
-      )}
     </nav>
   );
 };
