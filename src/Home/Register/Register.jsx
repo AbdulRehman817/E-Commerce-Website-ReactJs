@@ -117,6 +117,7 @@ const Register = () => {
 
           <button
             type="submit"
+            onClick={() => navigate("/")}
             className="w-full bg-blue-600 text-white font-semibold p-3 rounded-lg hover:bg-blue-700 transition-all"
           >
             Register
