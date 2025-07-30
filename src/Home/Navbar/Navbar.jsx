@@ -78,9 +78,7 @@ const Navbar = () => {
           <Link to="/audio-video" className="hover:text-lime-300">
             Audio & video
           </Link>
-          <Link to="/refrigerator" className="hover:text-lime-300">
-            Refrigerator
-          </Link>
+       
           <Link to="/new-arrivals" className="hover:text-lime-300">
             New arrivals
           </Link>
