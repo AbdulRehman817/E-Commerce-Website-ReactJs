@@ -31,9 +31,11 @@ const Navbar = () => {
   }, [dispatch]);
 
   // Filter products based on search term
-  const filteredProducts = items.filter((product) => {
-    return product.name.toLowerCase().includes(searchTerm.toLowerCase());
-  }).slice(0, 5);;
+  const filteredProducts = items
+    .filter((product) => {
+      return product.name.toLowerCase().includes(searchTerm.toLowerCase());
+    })
+    .slice(0, 5);
 
   const handleSearchInputChange = (e) => {
     const term = e.target.value;
@@ -42,25 +44,28 @@ const Navbar = () => {
 
   const SignoutUser = () => {
     LogoutUser();
+    localStorage.removeItem("cart");
+    localStorage.removeItem("shippingDetails");
+    localStorage.removeItem("token");
     navigate("/login");
   };
 
   const handleSearchIconClick = () => {
     setIsSearchOpen(true);
-    setShowModal(true)
+    setShowModal(true);
   };
-  const handleCloseModal = ()=>{
-      setShowModal(false);
-      setIsSearchOpen(false)
-      dispatch(setSearchTerm(""))
-  }
+  const handleCloseModal = () => {
+    setShowModal(false);
+    setIsSearchOpen(false);
+    dispatch(setSearchTerm(""));
+  };
   return (
     <nav className="bg-blue-500 px-4 py-4 shadow-md w-full">
       <div className="flex items-center justify-between max-w-7xl mx-auto relative">
         {/* Logo Section */}
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 bg-lime-400 rounded-full flex items-center justify-center">
-            <span className="text-white font-bold text-xl">o</span>      
+            <span className="text-white font-bold text-xl">o</span>
           </div>
           <Link to="/" className="text-white font-bold text-lg">
             tronmart
@@ -78,7 +83,7 @@ const Navbar = () => {
           <Link to="/audio-video" className="hover:text-lime-300">
             Audio & video
           </Link>
-       
+
           <Link to="/new-arrivals" className="hover:text-lime-300">
             New arrivals
           </Link>
@@ -92,34 +97,43 @@ const Navbar = () => {
 
         {/* Right Section: Cart, Profile, Mobile Menu */}
         <div className="flex items-center space-x-6">
-            <div className="relative">
-                <FaSearch className="text-white text-xl cursor-pointer" onClick={handleSearchIconClick} />
-             </div>
+          <div className="relative">
+            <FaSearch
+              className="text-white text-xl cursor-pointer"
+              onClick={handleSearchIconClick}
+            />
+          </div>
           {showModal && (
             <SearchModal
               filteredProducts={filteredProducts}
               closeModal={handleCloseModal}
             />
           )}
-          <div className={`w-full lg:hidden absolute top-12 left-0 z-50 transition-all duration-300 ${isSearchOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`}>
-          <input
-             onChange={(e) => {
-              handleSearchInputChange(e);
-             }}
+          <div
+            className={`w-full lg:hidden absolute top-12 left-0 z-50 transition-all duration-300 ${
+              isSearchOpen ? "opacity-100 visible" : "opacity-0 invisible"
+            }`}
+          >
+            <input
+              onChange={(e) => {
+                handleSearchInputChange(e);
+              }}
               type="text"
               placeholder="Search products..."
               className={`w-full p-2 border border-gray-300 rounded-md`}
             />
-           </div>
+          </div>
           {/* Search Bar  */}
           <div className="hidden lg:block relative">
             <input
-             onChange={(e) => {
-              handleSearchInputChange(e);
-               setShowModal(true);
+              onChange={(e) => {
+                handleSearchInputChange(e);
+                setShowModal(true);
               }}
               type="text"
-              placeholder="Search products..." className="p-2 border border-gray-300 rounded-md w-64" />
+              placeholder="Search products..."
+              className="p-2 border border-gray-300 rounded-md w-64"
+            />
           </div>
 
           {/* Cart Icon */}
@@ -128,6 +142,11 @@ const Navbar = () => {
             onClick={() => navigate("/Cart")}
           >
             <FaShoppingCart className="text-white text-xl" />
+            {cartCount > 0 && (
+              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                {cartCount}
+              </span>
+            )}
           </div>
 
           {/* Profile Section */}
@@ -184,8 +203,8 @@ const Navbar = () => {
           {/* Mobile Menu Button */}
           <div
             className="lg:hidden cursor-pointer"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}>
-        
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+          >
             {isMenuOpen ? (
               <FaTimes className="text-white text-2xl" />
             ) : (
@@ -213,7 +232,6 @@ const Navbar = () => {
           </Link>
           <Link to="/home-appliances" className="hover:text-lime-300">
             Home appliances
-
           </Link>
           <Link to="/audio-video" className="hover:text-lime-300">
             Audio & video
