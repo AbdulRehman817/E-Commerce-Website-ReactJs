@@ -1,17 +1,9 @@
 import React, { useState, useRef, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../AuthContext/authcontext";
 import { useDispatch, useSelector } from "react-redux";
 import { setSearchTerm, fetchProducts } from "../Redux/cartSlice";
-import {
-  FaTimes,
-  FaArrowLeft,
-  FaShoppingCart,
-  FaSearch,
-  FaBars,
-} from "react-icons/fa";
-
+import { FaTimes, FaShoppingCart, FaSearch, FaBars } from "react-icons/fa";
 import SearchModal from "./searchModal";
 
 const Navbar = () => {
@@ -19,14 +11,14 @@ const Navbar = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const cart = useSelector((state) => state.allCart?.cart || []);
-
   const products = useSelector((state) => state.allCart?.items || []);
   const searchTerm = useSelector((state) => state.allCart?.searchTerm || "");
+
   const [showModal, setShowModal] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const searchInputRef = useRef(null);
+
   const cartCount = cart.reduce(
     (total, item) => total + (item.quantity || 1),
     0
@@ -37,15 +29,14 @@ const Navbar = () => {
   }, [dispatch]);
 
   // Filter products based on search term
-  const filteredProducts = items
-    .filter((product) => {
-      return product.name.toLowerCase().includes(searchTerm.toLowerCase());
-    })
+  const filteredProducts = products
+    .filter((product) =>
+      product.name.toLowerCase().includes(searchTerm.toLowerCase())
+    )
     .slice(0, 5);
 
   const handleSearchInputChange = (e) => {
-    const term = e.target.value;
-    dispatch(setSearchTerm(term));
+    dispatch(setSearchTerm(e.target.value));
   };
 
   const SignoutUser = () => {
@@ -59,12 +50,15 @@ const Navbar = () => {
   const handleSearchIconClick = () => {
     setIsSearchOpen(true);
     setShowModal(true);
+    setIsMenuOpen(false); // close menu if search is open
   };
+
   const handleCloseModal = () => {
     setShowModal(false);
     setIsSearchOpen(false);
     dispatch(setSearchTerm(""));
   };
+
   return (
     <nav className="bg-blue-500 px-4 py-4 shadow-md w-full">
       <div className="flex items-center justify-between max-w-7xl mx-auto relative">
@@ -89,7 +83,6 @@ const Navbar = () => {
           <Link to="/audio-video" className="hover:text-lime-300">
             Audio & video
           </Link>
-
           <Link to="/new-arrivals" className="hover:text-lime-300">
             New arrivals
           </Link>
@@ -101,35 +94,36 @@ const Navbar = () => {
           </Link>
         </div>
 
-        {/* Right Section: Cart, Profile, Mobile Menu */}
+        {/* Right Section */}
         <div className="flex items-center space-x-6">
-          <div className="relative">
-            <FaSearch
-              className="text-white text-xl cursor-pointer"
-              onClick={handleSearchIconClick}
-            />
-          </div>
+          {/* Search Icon */}
+          <FaSearch
+            className="text-white text-xl cursor-pointer"
+            onClick={handleSearchIconClick}
+          />
+
           {showModal && (
             <SearchModal
               filteredProducts={filteredProducts}
               closeModal={handleCloseModal}
             />
           )}
+
+          {/* Mobile Search Bar */}
           <div
             className={`w-full lg:hidden absolute top-12 left-0 z-50 transition-all duration-300 ${
               isSearchOpen ? "opacity-100 visible" : "opacity-0 invisible"
             }`}
           >
             <input
-              onChange={(e) => {
-                handleSearchInputChange(e);
-              }}
+              onChange={handleSearchInputChange}
               type="text"
               placeholder="Search products..."
-              className={`w-full p-2 border border-gray-300 rounded-md`}
+              className="w-full p-2 border border-gray-300 rounded-md"
             />
           </div>
-          {/* Search Bar  */}
+
+          {/* Desktop Search Bar */}
           <div className="hidden lg:block relative">
             <input
               onChange={(e) => {
@@ -145,7 +139,7 @@ const Navbar = () => {
           {/* Cart Icon */}
           <div
             className="relative cursor-pointer"
-            onClick={() => navigate("/Cart")}
+            onClick={() => navigate("/cart")}
           >
             <FaShoppingCart className="text-white text-xl" />
             {cartCount > 0 && (
@@ -163,17 +157,16 @@ const Navbar = () => {
                 onClick={() => setIsProfileOpen(!isProfileOpen)}
               >
                 <span className="text-gray-600 font-bold">
-                  {user?.data.email.charAt(0) || "U"}
+                  {user?.data.name?.charAt(0).toUpperCase() || "U"}
                 </span>
               </div>
+
               {isProfileOpen && (
                 <div className="absolute right-0 mt-2 w-48 bg-slate-800 text-white rounded-lg shadow-lg z-10">
                   <div className="px-4 py-3 border-b border-slate-700">
-                    <p className="font-bold">
-                      {user?.data.name || "Bonnie Green"}
-                    </p>
+                    <p className="font-bold">{user?.data.name || "User"}</p>
                     <p className="text-[12px] text-gray-300">
-                      {user?.data.email || "name@flowbite.com"}
+                      {user?.data.email || "email@example.com"}
                     </p>
                   </div>
                   <ul className="py-2">
@@ -185,11 +178,6 @@ const Navbar = () => {
                     <li>
                       <a href="#" className="block px-4 py-2 hover:bg-gray-700">
                         Settings
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#" className="block px-4 py-2 hover:bg-gray-700">
-                        Earnings
                       </a>
                     </li>
                   </ul>
@@ -209,7 +197,10 @@ const Navbar = () => {
           {/* Mobile Menu Button */}
           <div
             className="lg:hidden cursor-pointer"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            onClick={() => {
+              setIsMenuOpen(!isMenuOpen);
+              setIsSearchOpen(false); // close search when menu is open
+            }}
           >
             {isMenuOpen ? (
               <FaTimes className="text-white text-2xl" />
