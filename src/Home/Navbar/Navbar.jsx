@@ -26,6 +26,8 @@ const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const searchInputRef = useRef(null);
+  const cartCount = items.reduce((total, item) => total + item.quantity, 0);
+
   useEffect(() => {
     dispatch(fetchProducts());
   }, [dispatch]);
