@@ -30,6 +30,7 @@ const Register = () => {
         `https://backend-for-e-commerce-website-slnb.vercel.app/api/v1/register`,
         {
           method: "POST",
+          credentials: "include",
           headers: {
             "Content-Type": "application/json",
           },

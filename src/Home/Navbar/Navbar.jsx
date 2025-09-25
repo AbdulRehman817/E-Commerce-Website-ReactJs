@@ -18,7 +18,8 @@ const Navbar = () => {
   const { isLoggedIn, LogoutUser, user } = useAuth();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const items = useSelector((state) => state.allCart?.items || []);
+  const cart = useSelector((state) => state.allCart?.cart || []);
+
   const products = useSelector((state) => state.allCart?.items || []);
   const searchTerm = useSelector((state) => state.allCart?.searchTerm || "");
   const [showModal, setShowModal] = useState(false);
@@ -26,7 +27,10 @@ const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const searchInputRef = useRef(null);
-  const cartCount = items.reduce((total, item) => total + item.quantity, 0);
+  const cartCount = cart.reduce(
+    (total, item) => total + (item.quantity || 1),
+    0
+  );
 
   useEffect(() => {
     dispatch(fetchProducts());
