@@ -29,7 +29,7 @@ const Categories = () => {
 
   useEffect(() => {
     fetch(
-      `https://backend-for-e-commerce-website-slnb.vercel.app/api/v1/categories`
+      `https://backend-for-e-commerce-website-gj6r.vercel.app/api/v1/categories`
     )
       .then((res) => res.json())
       .then((data) => setCategories(data))
@@ -41,7 +41,7 @@ const Categories = () => {
     setInitialLoad(true);
     setSelectedCategory(category);
     fetch(
-      `https://backend-for-e-commerce-website-slnb.vercel.app/api/v1/products/category/${encodeURIComponent(
+      `https://backend-for-e-commerce-website-gj6r.vercel.app/api/v1/products/category/${encodeURIComponent(
         category
       )}`
     )

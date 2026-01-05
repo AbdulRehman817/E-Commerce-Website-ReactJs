@@ -27,7 +27,7 @@ const Register = () => {
 
     try {
       const response = await fetch(
-        `https://backend-for-e-commerce-website-slnb.vercel.app/api/v1/register`,
+        `https://backend-for-e-commerce-website-gj6r.vercel.app/api/v1/register`,
         {
           method: "POST",
           credentials: "include",

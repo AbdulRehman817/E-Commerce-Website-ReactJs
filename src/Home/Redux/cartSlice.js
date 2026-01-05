@@ -1,11 +1,11 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 // Fetch products from API
 export const fetchProducts = createAsyncThunk(
   "cart/fetchProducts",
   async () => {
     const response = await fetch(
-      `https://backend-for-e-commerce-website-slnb.vercel.app/api/v1/getProduct`
+      `https://backend-for-e-commerce-website-gj6r.vercel.app/api/v1/getProduct`
     );
     const data = await response.json();
     return data; // Returning API response
@@ -13,11 +13,11 @@ export const fetchProducts = createAsyncThunk(
 );
 
 const initialState = {
-  cart: [],           // Cart items
-  items: [],          // All fetched products
-  totalQuantity: 0,   // Total items in the cart
-  totalPrice: 0,      // Total price of items in the cart
-  searchTerm: '',     // Search term for filtering products
+  cart: [], // Cart items
+  items: [], // All fetched products
+  totalQuantity: 0, // Total items in the cart
+  totalPrice: 0, // Total price of items in the cart
+  searchTerm: "", // Search term for filtering products
   filteredProducts: [], //filter products according to user search
 };
 const cartSlice = createSlice({
@@ -34,7 +34,7 @@ const cartSlice = createSlice({
       } else {
         state.cart.push({ ...action.payload, quantity: 1 });
       }
-      localStorage.setItem('cart', JSON.stringify(state.cart));
+      localStorage.setItem("cart", JSON.stringify(state.cart));
     },
     setCart: (state, action) => {
       state.cart = action.payload;

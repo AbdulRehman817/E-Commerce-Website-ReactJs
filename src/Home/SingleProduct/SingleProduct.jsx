@@ -1,5 +1,3 @@
-
-
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -29,7 +27,7 @@ const SingleProduct = () => {
     if (id) {
       axios
         .get(
-          `https://backend-for-e-commerce-website-slnb.vercel.app/api/v1/getProduct/${id}`
+          `https://backend-for-e-commerce-website-gj6r.vercel.app/api/v1/getProduct/${id}`
         )
         .then((res) => setData(res.data.product))
         .catch((error) => console.log(error));
@@ -46,7 +44,7 @@ const SingleProduct = () => {
     try {
       const token = localStorage.getItem("token");
       await axios.post(
-        `https://backend-for-e-commerce-website-slnb.vercel.app/api/v1/cart`,
+        `https://backend-for-e-commerce-website-gj6r.vercel.app/api/v1/cart`,
         { productId: data._id, quantity },
         { headers: { Authorization: `Bearer ${token}` } }
       );

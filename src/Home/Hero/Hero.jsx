@@ -11,7 +11,7 @@ const Hero = () => {
 
   useEffect(() => {
     fetch(
-      `https://backend-for-e-commerce-website-slnb.vercel.app/api/v1/categories`
+      `https://backend-for-e-commerce-website-gj6r.vercel.app/api/v1/categories`
     )
       .then((res) => res.json())
       .then((data) => setCategories(data))
@@ -30,7 +30,7 @@ const Hero = () => {
       >
         <div className="bg-white p-6 sm:p-8 rounded-lg shadow-lg max-w-screen-sm md:max-w-md mx-4 md:mx-0">
           <img
-            src="https://websitedemos.net/electronic-store-04/wp-content/uploads/sites/1055/2022/03/electronic-store-brand-logo-00.png"            
+            src="https://websitedemos.net/electronic-store-04/wp-content/uploads/sites/1055/2022/03/electronic-store-brand-logo-00.png"
             alt="Logo"
             className="h-10 w-auto mb-4"
           />
@@ -46,7 +46,7 @@ const Hero = () => {
         </div>
       </div>
 
-        {/* Services Section */}
+      {/* Services Section */}
       <div className="bg-white max-w-screen-lg mx-auto p-6 rounded-lg shadow-md grid grid-cols-2 sm:grid-cols-4 gap-4 px-4">
         {[
           {
@@ -98,8 +98,8 @@ const Hero = () => {
                   className="rounded-lg flex flex-col items-center p-4 cursor-pointer bg-gray-50 hover:bg-gray-100 transition-shadow shadow-sm hover:shadow-lg"
                   onClick={() => navigate(`/category/${category.name}`)}
                 >
-                 <img
-                    src={category.image}                   
+                  <img
+                    src={category.image}
                     alt={category.name}
                     className="w-full h-24 sm:h-32 object-cover mb-3 rounded"
                   />
@@ -118,7 +118,6 @@ const Hero = () => {
         </div>
       </div>
     </div>
-
   );
 };
 

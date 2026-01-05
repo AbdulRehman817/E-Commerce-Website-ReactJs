@@ -27,7 +27,7 @@ const Login = () => {
 
     try {
       const response = await fetch(
-        `https://backend-for-e-commerce-website-slnb.vercel.app/api/v1/login`,
+        `https://backend-for-e-commerce-website-gj6r.vercel.app/api/v1/login`,
         {
           method: "POST",
           headers: {
