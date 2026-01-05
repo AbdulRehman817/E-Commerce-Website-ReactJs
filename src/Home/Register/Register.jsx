@@ -41,7 +41,7 @@ const Register = () => {
       const res_data = await response.json();
       console.log("API Response:", res_data);
 
-      if (response.ok && res_data.accessToken) {
+      if (response.ok) {
         toast.success("Registration successful");
         storetokenInLocalStorage(res_data.accessToken);
 
