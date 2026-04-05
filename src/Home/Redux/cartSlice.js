@@ -5,7 +5,7 @@ export const fetchProducts = createAsyncThunk(
   "cart/fetchProducts",
   async () => {
     const response = await fetch(
-      `https://backend-for-e-commerce-website-gj6r.vercel.app/api/v1/getProduct`
+      `https://backend-for-e-commerce-website-slnb.vercel.app/api/v1/getProduct`
     );
     const data = await response.json();
     return data; // Returning API response
